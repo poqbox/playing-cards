@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import './App.css'
 
 // test by running "npm run dev" in the terminal
