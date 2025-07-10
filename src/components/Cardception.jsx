@@ -4,7 +4,8 @@ import getDeck from '../DeckOfCards'
 
 export default function Cardception() {
   const [Deck, setDeck] = useState(null)
-  const [card, setCard] = useState({images: {svg: ""}})
+  const [card, setCard] = useState({})
+  const [cardStyle, setCardStyle] = useState(null)
 
   // setup
   useEffect(() => {
@@ -20,13 +21,16 @@ export default function Cardception() {
 
   // state setters
   async function getCard() {
+    let card
     try {
-      setCard(await Deck.drawCard())
+      card = await Deck.drawCard()
     }
     catch (error) {
       await Deck.shuffleDeck()
-      setCard(await Deck.drawCard())
+      card = await Deck.drawCard()
     }
+    setCard(card)
+    setCardStyle({backgroundImage: `url(${card.images.svg})`})
   }
 
   // handlers for user interaction
@@ -37,12 +41,11 @@ export default function Cardception() {
   // React component
   return (
     <div>
-      <div className='card' onClick={handleClick}>
-        <img
-          className={`${card.code}`}
-          src={card.images.svg}
-        />
-      </div>
+      <div
+        onClick={handleClick}
+        className={`card ${card.code}`}
+        style={cardStyle}
+      ></div>
     </div>
   )
 }
