@@ -105,6 +105,24 @@ class DeckData {
     return data.success
   }
 
+  async drawFromPile(pile_name, card_codes) {
+    const card_codes_as_str = (Array.isArray(card_codes)) ? card_codes.join(",") : card_codes
+    const response = await fetch(`https://www.deckofcardsapi.com/api/deck/${this.#deck_id}/pile/${pile_name}/draw/?cards=${card_codes_as_str}`)
+    const data = await response.json()
+    this.#piles = data.piles
+
+    if (this.#debug_mode)
+      return data
+    else if (data.success) {
+      const cards = data.cards
+      if (cards.length === 1)
+        return cards[0]
+      return data.cards
+    }
+    else
+      throw data.error
+  }
+
   async returnCards() {
     const response = await fetch(`https://deckofcardsapi.com/api/deck/${this.#deck_id}/return/`)
     const data = await response.json()
