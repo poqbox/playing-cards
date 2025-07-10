@@ -1,3 +1,4 @@
+import { Route, Routes } from 'react-router-dom'
 import './App.css'
 import Cardception from './components/Cardception'
 
@@ -6,7 +7,10 @@ import Cardception from './components/Cardception'
 function App() {
   return (
     <>
-      <Cardception />
+      <Routes>
+        <Route path="/" element={<Cardception />} />
+        <Route path="/:card_code" element={<Cardception />} />
+      </Routes>
     </>
   )
 }

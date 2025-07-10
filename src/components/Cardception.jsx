@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import getDeck from '../DeckOfCards'
 
 
 export default function Cardception() {
+  const params = useParams()
+
   const pile_name = "cardception"
   const [DeckData, setDeck] = useState(null)
   const [CardPile, setCardPile] = useState(null)
@@ -11,6 +14,11 @@ export default function Cardception() {
   const [BackgroundCard, setBackgroundCard] = useState({})
   const [backgroundCardStyle, setBackgroundCardStyle] = useState(null)
   const [drawingCard, setDrawingCard] = useState(false)
+
+  // format the path params data
+  let card_code = params.card_code
+  if (card_code)
+    card_code = card_code.toUpperCase()
 
   // setup
   useEffect(() => {
@@ -32,7 +40,9 @@ export default function Cardception() {
 
   useEffect(() => {
     async function getFirstCard() {
-      let card = await DeckData.drawCard(pile_name)
+      let card = (await DeckData.getCardCodes().includes(card_code))
+        ? await DeckData.drawFromPile(pile_name, card_code)
+        : await DeckData.drawCard(pile_name)
       setForegroundCard(card)
       setForegroundCardStyle({
         backgroundImage: `url(${card.images.svg})`,
