@@ -67,7 +67,7 @@ class DeckData {
     return data[0]
   }
 
-  async drawCards(amount, pile_name) {
+  async drawCards(amount, pile_name=null) {
     const response = (!pile_name)
       ? await fetch(`https://deckofcardsapi.com/api/deck/${this.#deck_id}/draw/?count=${amount}`)
       : await fetch(`https://deckofcardsapi.com/api/deck/${this.#deck_id}/pile/${pile_name}/draw/?count=${amount}`)
