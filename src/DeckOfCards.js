@@ -22,6 +22,7 @@ class DeckData {
     this.#debug_mode = debug_mode
   }
 
+  getCardCodes() { return DeckData.card_codes}
   getRemaining() { return this.#remaining }
   getShuffled() { return this.#shuffled }
   getPiles() { return this.#piles }
