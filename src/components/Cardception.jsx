@@ -23,7 +23,9 @@ export default function Cardception() {
   useEffect(() => {
     async function createPile() {
       await DeckData.drawCards(52)
-      setCardPile(await DeckData.addToPile(pile_name, DeckData.getCardCodes()))
+      await DeckData.addToPile(pile_name, DeckData.getCardCodes())
+      await DeckData.shufflePile(pile_name)
+      setCardPile(DeckData.getPiles()[pile_name])
     }
     createPile()
   }, [DeckData])
