@@ -3,7 +3,9 @@ import getDeck from '../DeckOfCards'
 
 
 export default function Cardception() {
-  const [Deck, setDeck] = useState(null)
+  const pile_name = "cardception"
+  const [DeckData, setDeck] = useState(null)
+  const [CardPile, setCardPile] = useState(null)
   const [ForegroundCard, setForegroundCard] = useState({})
   const [ForegroundCardStyle, setForegroundCardStyle] = useState(null)
   const [BackgroundCard, setBackgroundCard] = useState({})
@@ -19,8 +21,16 @@ export default function Cardception() {
   }, [])
 
   useEffect(() => {
+    async function createPile() {
+      await DeckData.drawCards(52)
+      setCardPile(await DeckData.addToPile(pile_name, DeckData.getCardCodes()))
+    }
+    createPile()
+  }, [DeckData])
+
+  useEffect(() => {
     async function getFirstCard() {
-      let card = await Deck.drawCard()
+      let card = await DeckData.drawCard(pile_name)
       setForegroundCard(card)
       setForegroundCardStyle({
         backgroundImage: `url(${card.images.svg})`,
@@ -28,7 +38,7 @@ export default function Cardception() {
       })
     }
     getFirstCard()
-  }, [Deck])
+  }, [CardPile])
 
   // state setters
   function startCardception() {
@@ -57,11 +67,12 @@ export default function Cardception() {
     const duration = 6000
     let card
     try {
-      card = await Deck.drawCard()
+      card = await DeckData.drawCard(pile_name)
     }
     catch (error) {
-      await Deck.shuffleDeck()
-      card = await Deck.drawCard()
+      await DeckData.addToPile(pile_name, DeckData.getCardCodes())
+      await DeckData.shufflePile(pile_name)
+      card = await DeckData.drawCard(pile_name)
     }
     setDrawingCard(false)
     setForegroundCard(card)
