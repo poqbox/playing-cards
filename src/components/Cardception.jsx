@@ -55,7 +55,35 @@ export default function Cardception() {
   // state setters
   function startCardception() {
     const duration = 4000
-    const max_card_size = "8000%"
+    let max_card_size
+    switch (ForegroundCard.code) {
+      case "JC":
+        max_card_size = "1000000%"
+        break
+      case "JH":
+        max_card_size = "24000%"
+        break
+      case "QC":
+        max_card_size = "20000%"
+        break
+      case "QH":
+        max_card_size = "100000%"
+        break
+      case "KC":
+        max_card_size = "100000%"
+        break
+      case "KD":
+        max_card_size = "40000%"
+        break
+      case "KH":
+        max_card_size = "40000%"
+        break
+      case "KS":
+        max_card_size = "40000%"
+        break
+      default:
+        max_card_size = "8000%"
+    }
 
     setForegroundCardStyle({
       ...ForegroundCardStyle,
