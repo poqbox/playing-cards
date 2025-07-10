@@ -34,7 +34,7 @@ export default function Cardception() {
   function startCardception() {
     const duration = 4000
     const max_card_size = "8000%"
-    console.log()
+
     setForegroundCardStyle({
       ...ForegroundCardStyle,
       backgroundSize: max_card_size,
