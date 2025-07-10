@@ -38,7 +38,7 @@ class DeckData {
 
     if (this.#debug_mode)
       return data
-    return {success}
+    return data.success
   }
 
   async shuffleDeckOnly() {
@@ -49,7 +49,7 @@ class DeckData {
 
     if (this.#debug_mode)
       return data
-    return {success}
+    return data.success
   }
 
   async drawCard(pile_name=null) {
@@ -70,7 +70,10 @@ class DeckData {
 
     if (this.#debug_mode)
       return data
-    return data.cards
+    else if (data.success)
+      return data.cards
+    else
+      throw data.error
   }
 
   async addToPile(pile_name, card_codes) {
@@ -81,7 +84,7 @@ class DeckData {
 
     if (this.#debug_mode)
       return data
-    return {success}
+    return data.success
   }
 
   async shufflePile(pile_name) {
@@ -91,7 +94,7 @@ class DeckData {
 
     if (this.#debug_mode)
       return data
-    return {success}
+    return data.success
   }
 
   async returnCards() {
@@ -102,7 +105,7 @@ class DeckData {
 
     if (this.#debug_mode)
       return data
-    return {success}
+    return data.success
   }
 
   async returnPile(pile_name) {
@@ -114,7 +117,7 @@ class DeckData {
 
     if (this.#debug_mode)
       return data
-    return {success}
+    return data.success
   }
 }
 
