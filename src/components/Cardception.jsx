@@ -16,11 +16,6 @@ export default function Cardception() {
   const [drawingCard, setDrawingCard] = useState(false)
   const inTransition = useRef(false)
 
-  // format the path params data
-  let card_code = params.card_code
-  if (card_code)
-    card_code = card_code.toUpperCase()
-
   // setup
   useEffect(() => {
     async function fetchDeck() {
@@ -30,25 +25,26 @@ export default function Cardception() {
   }, [])
 
   useEffect(() => {
+    // format the path params data
+    if (params.card_code)
+      params.card_code = params.card_code.toUpperCase()
+    createPile()
+
     async function createPile() {
+      await DeckData.shuffleDeck()
       await DeckData.drawCards(52)
       await DeckData.addToPile(pile_name, DeckData.getCardCodes())
       await DeckData.shufflePile(pile_name)
       setCardPile(DeckData.getPiles()[pile_name])
     }
-    createPile()
-  }, [DeckData])
+  }, [DeckData, params])
 
   useEffect(() => {
     async function getFirstCard() {
-      let card = (await DeckData.getCardCodes().includes(card_code))
-        ? await DeckData.drawFromPile(pile_name, card_code)
-        : await DeckData.drawCard(pile_name)
-      setForegroundCard(card)
-      setForegroundCardStyle({
-        backgroundImage: `url(${card.images.svg})`,
-        backgroundSize: "80%"
-      })
+      setForegroundCardStyle({})
+      let card = (await DeckData.getCardCodes().includes(params.card_code))
+        ? getCard(params.card_code)
+        : getCard()
     }
     getFirstCard()
   }, [CardPile])
@@ -105,17 +101,21 @@ export default function Cardception() {
     }, duration)
   }
 
-  async function getCard() {
+  async function getCard(card_code=undefined) {
     const duration1 = 4000
     const duration2 = 4000
     let card
     try {
-      card = await DeckData.drawCard(pile_name)
+      (await DeckData.getCardCodes().includes(card_code))
+        ? card = await DeckData.drawFromPile(pile_name, card_code)
+        : card = await DeckData.drawCard(pile_name)
     }
     catch (error) {
       await DeckData.addToPile(pile_name, DeckData.getCardCodes())
       await DeckData.shufflePile(pile_name)
-      card = await DeckData.drawCard(pile_name)
+      (await DeckData.getCardCodes().includes(card_code))
+        ? card = await DeckData.drawFromPile(pile_name, card_code)
+        : card = await DeckData.drawCard(pile_name)
     }
     setDrawingCard(false)
     setForegroundCard(card)
