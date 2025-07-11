@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import getDeck from '../DeckOfCards'
 
@@ -14,6 +14,7 @@ export default function Cardception() {
   const [BackgroundCard, setBackgroundCard] = useState({})
   const [backgroundCardStyle, setBackgroundCardStyle] = useState(null)
   const [drawingCard, setDrawingCard] = useState(false)
+  const inTransition = useRef(false)
 
   // format the path params data
   let card_code = params.card_code
@@ -54,6 +55,7 @@ export default function Cardception() {
 
   // state setters
   function startCardception() {
+    inTransition.current = false
     const duration = 4000
     let max_card_size
     switch (ForegroundCard.code) {
@@ -124,14 +126,18 @@ export default function Cardception() {
       transitionDuration: `${duration1/1000}s`,
       transitionTimingFunction: "ease-in"
     })
+    inTransition.current = true
     setTimeout(() => {
-      setForegroundCardStyle({
-        backgroundImage: `url(${card.images.svg})`,
-        backgroundSize: "80%",
-        transitionProperty: "background-size",
-        transitionDuration: `${duration2/1000}s`,
-        transitionTimingFunction: "cubic-bezier(1,.03,.3,1)"
-      })
+      if (inTransition.current) {
+        inTransition.current = false
+        setForegroundCardStyle({
+          backgroundImage: `url(${card.images.svg})`,
+          backgroundSize: "80%",
+          transitionProperty: "background-size",
+          transitionDuration: `${duration2/1000}s`,
+          transitionTimingFunction: "cubic-bezier(1,.03,.3,1)"
+        })
+      }
     }, duration1)
   }
 
