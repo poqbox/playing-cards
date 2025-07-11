@@ -46,7 +46,7 @@ export default function Cardception() {
       setForegroundCard(card)
       setForegroundCardStyle({
         backgroundImage: `url(${card.images.svg})`,
-        backgroundSize: "60%"
+        backgroundSize: "80%"
       })
     }
     getFirstCard()
@@ -82,7 +82,7 @@ export default function Cardception() {
         max_card_size = "40000%"
         break
       default:
-        max_card_size = "8000%"
+        max_card_size = "6000%"
     }
 
     setForegroundCardStyle({
@@ -104,7 +104,8 @@ export default function Cardception() {
   }
 
   async function getCard() {
-    const duration = 6000
+    const duration1 = 4000
+    const duration2 = 4000
     let card
     try {
       card = await DeckData.drawCard(pile_name)
@@ -118,11 +119,20 @@ export default function Cardception() {
     setForegroundCard(card)
     setForegroundCardStyle({
       backgroundImage: `url(${card.images.svg})`,
-      backgroundSize: "60%",
+      backgroundSize: "2%",
       transitionProperty: "background-size",
-      transitionDuration: `${duration/1000}s`,
-      transitionTimingFunction: "ease-in-out"
+      transitionDuration: `${duration1/1000}s`,
+      transitionTimingFunction: "ease-in"
     })
+    setTimeout(() => {
+      setForegroundCardStyle({
+        backgroundImage: `url(${card.images.svg})`,
+        backgroundSize: "80%",
+        transitionProperty: "background-size",
+        transitionDuration: `${duration2/1000}s`,
+        transitionTimingFunction: "cubic-bezier(1,.03,.3,1)"
+      })
+    }, duration1)
   }
 
   // handlers for user interaction
