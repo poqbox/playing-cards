@@ -149,7 +149,7 @@ export default function Cardception() {
   
   // React component
   return (
-    <div className={`background ${ForegroundCard.code}`} style={backgroundCardStyle}>
+    <div className={`background ${BackgroundCard.code}`} style={backgroundCardStyle}>
       <div
         onClick={(drawingCard) ? null : handleClick}
         className={`card ${ForegroundCard.code}`}
