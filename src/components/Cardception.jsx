@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import getDeck from '../DeckOfCards'
 
@@ -14,7 +14,7 @@ export default function Cardception() {
   const [BackgroundCard, setBackgroundCard] = useState({})
   const [backgroundCardStyle, setBackgroundCardStyle] = useState(null)
   const [drawingCard, setDrawingCard] = useState(false)
-  const inTransition = useRef(false)
+  const [transition, setTransition] = useState({timeoutId: undefined, clearTransitions: function () {clearTimeout(this.timeoutId)}})
 
   // setup
   useEffect(() => {
@@ -40,18 +40,19 @@ export default function Cardception() {
   }, [DeckData, params])
 
   useEffect(() => {
+    transition.clearTransitions()
+    getFirstCard()
+
     async function getFirstCard() {
       setForegroundCardStyle({})
       let card = (await DeckData.getCardCodes().includes(params.card_code))
         ? getCard(params.card_code)
         : getCard()
     }
-    getFirstCard()
   }, [CardPile])
 
   // state setters
   function startCardception() {
-    inTransition.current = false
     const duration = 4000
     let max_card_size
     switch (ForegroundCard.code) {
@@ -90,7 +91,7 @@ export default function Cardception() {
       transitionDuration: `${duration/1000}s`,
       transitionTimingFunction: "ease-in"
     })
-    setTimeout(() => {
+    transition.timeoutId = setTimeout(() => {
       setForegroundCardStyle({})
       setBackgroundCard(ForegroundCard)
       setBackgroundCardStyle({
@@ -126,23 +127,20 @@ export default function Cardception() {
       transitionDuration: `${duration1/1000}s`,
       transitionTimingFunction: "ease-in"
     })
-    inTransition.current = true
-    setTimeout(() => {
-      if (inTransition.current) {
-        inTransition.current = false
-        setForegroundCardStyle({
-          backgroundImage: `url(${card.images.svg})`,
-          backgroundSize: "80%",
-          transitionProperty: "background-size",
-          transitionDuration: `${duration2/1000}s`,
-          transitionTimingFunction: "cubic-bezier(1,.03,.3,1)"
-        })
-      }
+    transition.timeoutId = setTimeout(() => {
+      setForegroundCardStyle({
+        backgroundImage: `url(${card.images.svg})`,
+        backgroundSize: "80%",
+        transitionProperty: "background-size",
+        transitionDuration: `${duration2/1000}s`,
+        transitionTimingFunction: "cubic-bezier(1,.03,.3,1)"
+      })
     }, duration1)
   }
 
   // handlers for user interaction
   function handleClick() {
+    transition.clearTransitions()
     setDrawingCard(true)
     startCardception()
   }
