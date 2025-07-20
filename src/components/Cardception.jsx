@@ -15,6 +15,7 @@ export default function Cardception() {
   const [backgroundCardStyle, setBackgroundCardStyle] = useState(null)
   const [drawingCard, setDrawingCard] = useState(false)
   const [transition, setTransition] = useState({timeoutId: undefined, clearTransitions: function () {clearTimeout(this.timeoutId)}})
+  const [tooltip, setTooltip] = useState(null)
 
   // setup
   useEffect(() => {
@@ -136,12 +137,18 @@ export default function Cardception() {
         transitionDuration: `${duration2/1000}s`,
         transitionTimingFunction: "cubic-bezier(1,.03,.3,1)"
       })
+      if (CardPile.remaining > 50) {
+        transition.timeoutId = setTimeout(() => {
+          setTooltip("Click to begin Cardception")
+        }, duration2)
+      }
     }, duration1)
   }
 
   // handlers for user interaction
   function handleClick() {
     transition.clearTransitions()
+    setTooltip(null)
     setDrawingCard(true)
     startCardception()
   }
@@ -150,6 +157,7 @@ export default function Cardception() {
   return (
     <div className={`background ${BackgroundCard.code}`} style={backgroundCardStyle}>
       <div
+        title={tooltip}
         onClick={(drawingCard) ? null : handleClick}
         className={`card ${ForegroundCard.code}`}
         style={ForegroundCardStyle}
