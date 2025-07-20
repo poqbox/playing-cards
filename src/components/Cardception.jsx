@@ -118,6 +118,7 @@ export default function Cardception() {
         ? card = await DeckData.drawFromPile(pile_name, card_code)
         : card = await DeckData.drawCard(pile_name)
     }
+    CardPile.remaining = DeckData.getPiles()[pile_name].remaining
     setDrawingCard(false)
     setForegroundCard(card)
     setForegroundCardStyle({
